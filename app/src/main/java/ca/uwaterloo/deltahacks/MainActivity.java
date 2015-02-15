@@ -2,6 +2,12 @@ package ca.uwaterloo.deltahacks;
 
 import java.util.Locale;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -118,6 +124,39 @@ public class MainActivity extends ActionBarActivity {
                     return getString(R.string.title_section2).toUpperCase(l);
             }
             return null;
+        }
+    }
+
+    private boolean flag = false;
+
+    @Override
+    public void onBackPressed(){
+        flag = true;
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(!flag)
+        {
+            String title = "Looks like you're free Sunday.";
+            String body = "Why not give your time to the Hamilton Public Library?";
+
+            Intent notificationsIntent = new Intent(MainActivity.this, MainActivity.class);
+            PendingIntent contentIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationsIntent, 0);
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.ic_action_star)
+                            .setContentTitle(title)
+                            .setContentText(body)
+                            .setAutoCancel(true)
+                            .setDefaults(Notification.DEFAULT_ALL);
+
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify(1, mBuilder.build());
+            flag = false;
         }
     }
 

@@ -7,6 +7,7 @@
     <string name="title_section3">Near Me</string>
 
     <string name="listing_image_content_description">Listing image</string>
+    <string name="category_image_content_description">Category image</string>
 
     <string name="action_settings">Settings</string>
     <string name="action_search">Search for...</string>

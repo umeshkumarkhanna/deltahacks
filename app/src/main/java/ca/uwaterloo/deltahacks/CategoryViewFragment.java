@@ -28,7 +28,7 @@ public class CategoryViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.feature_view, container, false);
+        View rootView = inflater.inflate(R.layout.category_view, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
@@ -74,7 +74,7 @@ public class CategoryViewFragment extends Fragment {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.card_category, parent, false);
             // set the view's size, margins, paddings and layout parameters
-            CardView card = (CardView) v.findViewById(R.id.card_view);
+            CardView card = (CardView) v.findViewById(R.id.category_card_view);
 
             card.setPreventCornerOverlap(false);
             card.setCardElevation(0);
@@ -97,6 +97,22 @@ public class CategoryViewFragment extends Fragment {
 
             switch (category) {
                 //TODO: implement img.setImageResource(int) for each category
+
+                case "General":
+                    img.setImageResource(R.drawable.general);
+                    break;
+
+                case "Community":
+                    img.setImageResource(R.drawable.community);
+                    break;
+
+                case "Education":
+                    img.setImageResource(R.drawable.education);
+                    break;
+
+                case "Sports":
+                    img.setImageResource(R.drawable.sports);
+                    break;
             }
         }
 

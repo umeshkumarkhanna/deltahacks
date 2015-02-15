@@ -89,9 +89,8 @@ public class MainActivity extends ActionBarActivity {
                     return new FeatureViewFragment();
                 case 2:
                     return new PlaceholderFragment();
-                default:
-                    return null;
             }
+            return null;
         }
 
         @Override

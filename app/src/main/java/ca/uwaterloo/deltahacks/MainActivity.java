@@ -144,18 +144,20 @@ public class MainActivity extends ActionBarActivity {
         super.onPause();
         if(!flag)
         {
-            String title = "Doing anything Sunday afternoon?";
+            String title = "Looks like you're free Sunday.";
             String body = "Why not give your time to the Hamilton Public Library?";
+
+            Intent notificationsIntent = new Intent(MainActivity.this, MainActivity.class);
+            PendingIntent contentIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationsIntent, 0);
 
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.ic_action_star)
                             .setContentTitle(title)
                             .setContentText(body)
-                            .setAutoCancel(true);
+                            .setAutoCancel(true)
+                            .setDefaults(Notification.DEFAULT_ALL);
 
             NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            Intent notificationsIntent = new Intent(MainActivity.this, MainActivity.class);
-            PendingIntent contentIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationsIntent, 0);
             mBuilder.setContentIntent(contentIntent);
             mNotificationManager.notify(1, mBuilder.build());
             flag = false;

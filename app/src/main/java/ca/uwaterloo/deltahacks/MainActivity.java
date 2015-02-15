@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -138,28 +139,27 @@ public class MainActivity extends ActionBarActivity {
         super.onBackPressed();
     }
 
+    @Override
     public void onPause(){
+        super.onPause();
         if(!flag)
         {
-                String title = "Title of Msg";
-                String body = "Body of Msg";
+            String title = "Doing anything Sunday afternoon?";
+            String body = "Why not give your time to the Hamilton Public Library?";
 
-                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                Notification notification = new Notification(R.drawable.ic_action_star, title, System.currentTimeMillis());
-                Context context = getApplicationContext();
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.ic_action_star)
+                            .setContentTitle(title)
+                            .setContentText(body)
+                            .setAutoCancel(true);
 
-                Intent notificationsIntent = new Intent(MainActivity.this, MainActivity.class);
-
-                notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-
-                notification.flags |= Notification.FLAG_AUTO_CANCEL;
-                PendingIntent contentIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationsIntent, 0);
-                notification.setLatestEventInfo(context, title, body, contentIntent);
-                mNotificationManager.notify(1, notification);
-                flag = false;
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            Intent notificationsIntent = new Intent(MainActivity.this, MainActivity.class);
+            PendingIntent contentIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationsIntent, 0);
+            mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify(1, mBuilder.build());
+            flag = false;
         }
-
-        super.onPause();
     }
 
 }

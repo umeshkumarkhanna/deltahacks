@@ -1,12 +1,16 @@
 package ca.uwaterloo.deltahacks;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -23,19 +28,9 @@ public class FeatureViewFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    List<Listing> listings = Arrays.asList(
-            new Listing("Hamilton Public Library",
-                    "library",
-                    new String[] {"community"},
-                    9, 0,
-                    17, 30,
-                    2),
-            new Listing("McMaster Soup Kitchen",
-                    "soup_kitchen",
-                    new String[] {"community"},
-                    8, 30,
-                    20, 00,
-                    1));
+    SQLiteHelper sqliteHelper;
+
+    List<Listing> listings;
 
     public FeatureViewFragment() {
     }
@@ -44,6 +39,10 @@ public class FeatureViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.feature_view, container, false);
+
+        sqliteHelper = new SQLiteHelper(rootView.getContext());
+        sqliteHelper.onUpgrade(sqliteHelper.getWritableDatabase(),1,1);
+        listings = sqliteHelper.getAllElements();
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
@@ -139,6 +138,38 @@ public class FeatureViewFragment extends Fragment {
         Time endTime;
         int distanceKm;
 
+        public int getStarthour() {
+            return startTime.hour;
+        }
+
+        public int getStartMinute() {
+            return startTime.minute;
+        }
+
+        public int getEndhour() {
+            return endTime.hour;
+        }
+
+        public int getEndminute() {
+            return endTime.minute;
+        }
+
+        public String getOrg() {
+            return org;
+        }
+
+        public String getCat() {
+            return cat;
+        }
+
+        public String[] getTags() {
+            return tags;
+        }
+
+        public int getDistanceKm() {
+            return distanceKm;
+        }
+
         public class Time {
             int hour;
             int minute;
@@ -153,6 +184,7 @@ public class FeatureViewFragment extends Fragment {
                 this.hour = hour;
                 this.minute = minute;
             }
+
 
             @Override
             public String toString() {
@@ -169,6 +201,98 @@ public class FeatureViewFragment extends Fragment {
             this.startTime = new Time(startHour, startMinute);
             this.endTime = new Time(endHour, endMinute);
             this.distanceKm = distanceKm;
+        }
+    }
+
+    public class SQLiteHelper extends SQLiteOpenHelper {
+
+        private static final int DATABASE_VERSION = 1;
+        private static final String DATABASE_NAME = "ListingDb";
+        private static final String TABLE_LISTINGS = "listings";
+
+        private static final String KEY_ORG = "Organization";
+        private static final String KEY_CAT = "Category";
+        private static final String KEY_TAGS = "Tags";
+        private static final String KEY_STARTHOUR = "StartHour";
+        private static final String KEY_STARTMINUTE = "StartMinute";
+        private static final String KEY_ENDHOUR = "EndHour";
+        private static final String KEY_ENDMINUTE = "EndMinute";
+        private static final String KEY_DISTANCE = "Distance";
+
+        private static final String CREATE_LISTING_TABLE = "CREATE TABLE " + TABLE_LISTINGS +
+                " (Organization TEXT, " +
+                "Category TEXT, " +
+                "Tags TEXT, " +
+                "StartHour TEXT, " +
+                "StartMinute TEXT, " +
+                "EndHour TEXT, " +
+                "EndMinute TEXT, " +
+                "Distance TEXT)";
+
+        public SQLiteHelper(Context context) {
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            db.execSQL(CREATE_LISTING_TABLE);
+            addElement(new Listing("Hamilton Public Library",
+                    "library",
+                    new String[]{"community"},
+                    9, 0,
+                    17, 30,
+                    2), db);
+            addElement(new Listing("McMaster Soup Kitchen",
+                    "soup_kitchen",
+                    new String[]{"community"},
+                    8, 30,
+                    20, 0,
+                    1), db);
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_LISTINGS);
+
+            this.onCreate(db);
+        }
+
+        public void addElement(Listing listing, SQLiteDatabase db) {
+            ContentValues values = new ContentValues();
+            values.put(KEY_ORG, listing.getOrg());
+            values.put(KEY_CAT, listing.getCat());
+            values.put(KEY_TAGS, listing.getTags()[0]);
+            values.put(KEY_STARTHOUR, String.valueOf(listing.getStarthour()));
+            values.put(KEY_STARTMINUTE, String.valueOf(listing.getStartMinute()));
+            values.put(KEY_ENDHOUR, String.valueOf(listing.getEndhour()));
+            values.put(KEY_ENDMINUTE, String.valueOf(listing.getEndminute()));
+            values.put(KEY_DISTANCE, String.valueOf(listing.getDistanceKm()));
+            db.insert(TABLE_LISTINGS, null, values);
+        }
+
+        public List<Listing> getAllElements() {
+            List<Listing> listings = new ArrayList<>();
+            String query = "SELECT * FROM " + TABLE_LISTINGS;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(query, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    Listing listing = new Listing(cursor.getString(0), cursor.getString(1),
+                            new String[]{cursor.getString(2)},
+                            cursor.getInt(3),
+                            cursor.getInt(4),
+                            cursor.getInt(5),
+                            cursor.getInt(6),
+                            cursor.getInt(7));
+
+                    listings.add(listing);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.close();
+            return listings;
         }
     }
 

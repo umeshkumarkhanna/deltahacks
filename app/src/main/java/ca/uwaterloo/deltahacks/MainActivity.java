@@ -95,7 +95,7 @@ public class MainActivity extends ActionBarActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new PlaceholderFragment();
+                    return new CategoryViewFragment();
                 case 1:
                     return new FeatureViewFragment();
                 case 2:

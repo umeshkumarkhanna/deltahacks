@@ -1,7 +1,5 @@
 package ca.uwaterloo.deltahacks;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -13,31 +11,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class FeatureViewFragment extends Fragment {
+public class CategoryViewFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    List<Listing> listings = Arrays.asList(
-            new Listing("Hamilton Public Library",
-                    "library",
-                    new String[] {"community"},
-                    9, 0,
-                    17, 30,
-                    2),
-            new Listing("McMaster Soup Kitchen",
-                    "soup_kitchen",
-                    new String[] {"community"},
-                    8, 30,
-                    20, 00,
-                    1));
+    List<String> categories = Arrays.asList("General", "Community", "Education", "Sports");
 
-    public FeatureViewFragment() {
+    public CategoryViewFragment() {
     }
 
     @Override
@@ -56,14 +41,14 @@ public class FeatureViewFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new Adapter(listings);
+        mAdapter = new Adapter(categories);
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
     }
 
     public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
-        private List<Listing> listings;
+        private List<String> categories;
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
@@ -78,8 +63,8 @@ public class FeatureViewFragment extends Fragment {
         }
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public Adapter(List<Listing> listings) {
-            this.listings = listings;
+        public Adapter(List<String> categories) {
+            this.categories = categories;
         }
 
         // Create new views (invoked by the layout manager)
@@ -87,12 +72,12 @@ public class FeatureViewFragment extends Fragment {
         public Adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             // create a new view
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_listing, parent, false);
+                    .inflate(R.layout.card_category, parent, false);
             // set the view's size, margins, paddings and layout parameters
             CardView card = (CardView) v.findViewById(R.id.card_view);
 
             card.setPreventCornerOverlap(false);
-            card.setCardElevation(50);
+            card.setCardElevation(0);
 
             Adapter.ViewHolder vh = new Adapter.ViewHolder(v);
             return vh;
@@ -103,72 +88,22 @@ public class FeatureViewFragment extends Fragment {
         public void onBindViewHolder(Adapter.ViewHolder holder, int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
-            TextView organization_name = (TextView) holder.mCardView.findViewById(R.id.organization_name);
-            TextView distance = (TextView) holder.mCardView.findViewById(R.id.distance);
-            TextView hours = (TextView) holder.mCardView.findViewById(R.id.hours);
+            TextView category_name = (TextView) holder.mCardView.findViewById(R.id.category_name);
             ImageView img = (ImageView) holder.mCardView.findViewById(R.id.image);
 
-            Listing listing = listings.get(position);
+            String category = categories.get(position);
 
-            organization_name.setText(listing.org);
-            distance.setText(String.format("%d km", listing.distanceKm));
-            hours.setText(listing.startTime.toString() + " - " + listing.endTime.toString());
+            category_name.setText(category);
 
-            switch (listing.cat) {
-                case "library":
-                    img.setImageResource(R.drawable.library);
-                    break;
-                case "soup_kitchen":
-                    img.setImageResource(R.drawable.soup_kitchen);
-                    break;
+            switch (category) {
+                //TODO: implement img.setImageResource(int) for each category
             }
         }
 
         // Return the size of your dataset (invoked by the layout manager)
         @Override
         public int getItemCount() {
-            return listings.size();
-        }
-    }
-
-    public class Listing {
-        String org;
-        String cat;
-        String[] tags;
-        Time startTime;
-        Time endTime;
-        int distanceKm;
-
-        public class Time {
-            int hour;
-            int minute;
-
-            public Time(int hour, int minute) {
-                if( hour > 24 || hour < 1) {
-                    throw new IllegalArgumentException("Invalid hour");
-                }
-                if( minute > 60 || minute < 0) {
-                    throw new IllegalArgumentException("Invalid minute");
-                }
-                this.hour = hour;
-                this.minute = minute;
-            }
-
-            @Override
-            public String toString() {
-                return String.format("%d:" + (minute < 10 ? "0" : "") + "%d " + (hour > 12 ? "pm" : "am"),
-                        ((hour - 1) % 12) + 1, minute);
-            }
-        }
-
-        public Listing(String org, String cat, String[] tags, int startHour, int startMinute,
-                       int endHour, int endMinute, int distanceKm) {
-            this.org = org;
-            this.cat = cat;
-            this.tags = tags;
-            this.startTime = new Time(startHour, startMinute);
-            this.endTime = new Time(endHour, endMinute);
-            this.distanceKm = distanceKm;
+            return categories.size();
         }
     }
 

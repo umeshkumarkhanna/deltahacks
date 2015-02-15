@@ -2,7 +2,6 @@ package ca.uwaterloo.deltahacks;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,10 +54,10 @@ public class CategoryViewFragment extends Fragment {
         // you provide access to all the views for a data item in a view holder
         public class ViewHolder extends RecyclerView.ViewHolder {
             // each data item is just a string in this case
-          View mCardView;
+          View mView;
             public ViewHolder(View v) {
                 super(v);
-                mCardView = v;
+                mView = v;
             }
         }
 
@@ -74,10 +73,6 @@ public class CategoryViewFragment extends Fragment {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.card_category, parent, false);
             // set the view's size, margins, paddings and layout parameters
-            CardView card = (CardView) v.findViewById(R.id.category_card_view);
-
-            card.setPreventCornerOverlap(false);
-            card.setCardElevation(0);
 
             Adapter.ViewHolder vh = new Adapter.ViewHolder(v);
             return vh;
@@ -88,16 +83,14 @@ public class CategoryViewFragment extends Fragment {
         public void onBindViewHolder(Adapter.ViewHolder holder, int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
-            TextView category_name = (TextView) holder.mCardView.findViewById(R.id.category_name);
-            ImageView img = (ImageView) holder.mCardView.findViewById(R.id.image);
+            TextView category_name = (TextView) holder.mView.findViewById(R.id.category_name);
+            ImageView img = (ImageView) holder.mView.findViewById(R.id.image);
 
             String category = categories.get(position);
 
             category_name.setText(category);
 
             switch (category) {
-                //TODO: implement img.setImageResource(int) for each category
-
                 case "General":
                     img.setImageResource(R.drawable.general);
                     break;

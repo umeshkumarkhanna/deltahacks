@@ -1,10 +1,9 @@
 <resources>
-    <string name="app_name">DeltaHacks</string>
+    <string name="app_name">Brighten</string>
 
 
     <string name="title_section1">Categories</string>
     <string name="title_section2">Recommended</string>
-    <string name="title_section3">Near Me</string>
 
     <string name="listing_image_content_description">Listing image</string>
     <string name="category_image_content_description">Category image</string>

@@ -120,6 +120,15 @@ public class FeatureViewFragment extends Fragment {
                 case "soup_kitchen":
                     img.setImageResource(R.drawable.soup_kitchen);
                     break;
+                case "healthcare":
+                    img.setImageResource(R.drawable.healthcare);
+                    break;
+                case "animals":
+                    img.setImageResource(R.drawable.animals);
+                    break;
+                case "nature":
+                    img.setImageResource(R.drawable.nature);
+                    break;
             }
         }
 
@@ -238,16 +247,34 @@ public class FeatureViewFragment extends Fragment {
             db.execSQL(CREATE_LISTING_TABLE);
             addElement(new Listing("Hamilton Public Library",
                     "library",
-                    new String[]{"community"},
+                    new String[]{"general"},
                     9, 0,
                     17, 30,
-                    2), db);
+                    1), db);
             addElement(new Listing("McMaster Soup Kitchen",
                     "soup_kitchen",
-                    new String[]{"community"},
+                    new String[]{"general"},
                     8, 30,
                     20, 0,
                     1), db);
+            addElement(new Listing("The Kidney Foundation of Canada",
+                    "healthcare",
+                    new String[]{"general"},
+                    10, 30,
+                    15, 0,
+                    2), db);
+            addElement(new Listing("Hamilton Animal Shelter",
+                    "animals",
+                    new String[]{"general"},
+                    9, 30,
+                    16, 30,
+                    4), db);
+            addElement(new Listing("Hamilton Conservation Authority",
+                    "nature",
+                    new String[]{"general"},
+                    7, 30,
+                    21, 0,
+                    5), db);
         }
 
         @Override

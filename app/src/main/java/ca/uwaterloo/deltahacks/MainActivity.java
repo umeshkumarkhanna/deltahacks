@@ -180,8 +180,8 @@ public class MainActivity extends ActionBarActivity {
             // you provide access to all the views for a data item in a view holder
             public class ViewHolder extends RecyclerView.ViewHolder {
                 // each data item is just a string in this case
-              CardView mCardView;
-                public ViewHolder(CardView v) {
+              View mCardView;
+                public ViewHolder(View v) {
                     super(v);
                     mCardView = v;
                 }
@@ -197,7 +197,7 @@ public class MainActivity extends ActionBarActivity {
             public Adapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                            int viewType) {
                 // create a new view
-                CardView v = (CardView) LayoutInflater.from(parent.getContext())
+                View v = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.card_listing, parent, false);
                 // set the view's size, margins, paddings and layout parameters
                 //

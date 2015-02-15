@@ -9,7 +9,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -50,8 +52,14 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+
+        // Commented out for now
+        // getMenuInflater().inflate(R.menu.menu_main, menu);
+        // return true;
+
+        MenuInflater mif = getMenuInflater();
+        mif.inflate(R.menu.main_activity_action, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -69,6 +77,9 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void viewDetails(View view) {
+
+    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

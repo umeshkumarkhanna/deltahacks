@@ -6,6 +6,9 @@
     <string name="title_section2">Recommended</string>
     <string name="title_section3">Near Me</string>
 
-    <string name="action_settings">Settings</string>
     <string name="listing_image_content_description">Listing image</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search for...</string>
+
 </resources>

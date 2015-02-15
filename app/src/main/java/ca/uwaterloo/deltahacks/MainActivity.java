@@ -2,6 +2,11 @@ package ca.uwaterloo.deltahacks;
 
 import java.util.Locale;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -123,6 +128,38 @@ public class MainActivity extends ActionBarActivity {
             }
             return null;
         }
+    }
+
+    private boolean flag = false;
+
+    @Override
+    public void onBackPressed(){
+        flag = true;
+        super.onBackPressed();
+    }
+
+    public void onPause(){
+        if(!flag)
+        {
+                String title = "Title of Msg";
+                String body = "Body of Msg";
+
+                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                Notification notification = new Notification(R.drawable.ic_action_star, title, System.currentTimeMillis());
+                Context context = getApplicationContext();
+
+                Intent notificationsIntent = new Intent(MainActivity.this, MainActivity.class);
+
+                notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+
+                notification.flags |= Notification.FLAG_AUTO_CANCEL;
+                PendingIntent contentIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationsIntent, 0);
+                notification.setLatestEventInfo(context, title, body, contentIntent);
+                mNotificationManager.notify(1, notification);
+                flag = false;
+        }
+
+        super.onPause();
     }
 
 }
